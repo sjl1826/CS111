@@ -1,0 +1,21 @@
+My code implements all the options except for --profile.
+For --rdonly, I open the given file and store the file descriptor.
+For --wronly, I open the given file and store the file descriptor as well.
+For --verbose, I check for each of my options and output the commands if verbose is set.
+For --command, I parse through all of the arguments, set the correct file descriptors to stdin, stdout, and stderr and then execute the command with its parameters.
+For the command-line option flags for opening files, I keep a final flag and "or" the flags with the final flag to then add the final flag to the final open call. I implemented the following flags: O_APPEND, O_CLOEXEC, O_CREAT, O_DIRECTORY, O_DSYNC, O_EXCL, O_NOFOLLOW, O_NONBLOCK, O_RSYNC, O_SYNC, O_TRUNC.
+For --rdwr, I open the given file with O_RDWR flag and store the file descriptor in my array of descriptors.
+For --pipe, I first open a pipe with my buffer as a parameter, and then add the two descriptors to my array of descriptors.
+For --close, I close the given descriptor and set the value to -1 in my array of descriptors as well.
+For --abort, I crash the shell by segmentation violation of assigning a value to a NULL pointer.
+For --catch, I register a signal handler and store the signal as the highest signal if it's the greatest signal.
+For --ignore, I register the SIG_IGN ignore handler.
+For --default, I reset the handler to default by registering SIG_DFL.
+For --pause, I use pause() to wait for a signal to arrive.
+For --profile, I call getrusage() at the beginning and the end of my switch statement as well as the end of my child process in --wait. I do this to analyze the times for each of my processes and output the performance of each of my options.
+
+SOURCES:
+https://stackoverflow.com/questions/10898401/how-to-reset-c-array-so-all-elements-are-0
+I discovered the use of memset through this forum to reset my c array to 0.
+https://www.gnu.org/software/libc/manual/html_node/Elapsed-Time.html
+I used this link to use the code snippet "timeval_subtract".

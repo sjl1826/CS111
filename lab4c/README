@@ -1,0 +1,10 @@
+lab4c_tcp.c: This C source file runs on a beaglebone, connects to a server
+and writes reports of the temperature to the socket.
+lab4c_tlc.c: This program opens a TLS connection to the server and writes
+reports of the temperature to the socket. This connection is encrypted.
+Makefile: This file builds my application as well as creates
+a deliverable tarball.
+README: This file contains a description of the files.
+
+Sources:
+https://www.tutorialspoint.com/unix_sockets/socket_client_example.htm

@@ -1,0 +1,3 @@
+lab4b.c: This C source file builds and runs on the beaglebone and logs
+temperature and button input. It polls for stdin as well.
+Makefile: This file builds, tests, and builds tarballs for this application.

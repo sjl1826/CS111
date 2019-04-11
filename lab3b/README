@@ -1,0 +1,2 @@
+lab3b.c: 
+Makefile: This file builds and runs the program lab3b, with options to create a tarball as well as clean the generated files.

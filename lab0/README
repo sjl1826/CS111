@@ -1,0 +1,21 @@
+My submission includes lab0.c, Makefile, backtrace.png, breakpoint.png, and README.
+lab0.c is my single C file that holds my implementation of a program that copies its standard input to its standard output. It handles several arguments such as specified input/output files as well as the ability to cause a segmentation fault, catch it, or dump-core.
+Makefile is a file that builds the program and the tarball. It has the following options: default, check, clean, dist. The default option builds the lab0.c file with -Wall, -Wextra, and -g options to maximize compile-time error checking as well as to add debugging support.
+backtrace.png is a screenshot of a gdb session running my lab0 executable with --segfault option, showing the segfault and the back trace of the stack.
+breakpoint.png is a screenshot of a gdb session running my lab0 executable, with a breakpoint at the variable assignment that causes the segmentation fault and clear proof that my pointer is null.
+README is a file with my identification information, description of files, and a description of my smoke test cases.
+
+My very first test case tests out my --segfault option. I first run my executable ./lab0 --segfault and check the status code. If the exit status is 139, I know that I caused a segmentation fault, otherwise I set my error flag so that I can output a test failure.
+My second test case is a test for --catch. Running ./lab0 --catch --segfault, I check that my segmentation fault function is never triggered but my executable instead exits with status 4, signalling that my segmentation fault was caught. Otherwise, I set my error flag to output a test failure.
+My third test case checks ./lab0 --catch --dump-core --segfault. The --dump-core option resets --catch. Therefore the exit status must be 139 as the segmentation fault is then caused, otherwise I set my error flag.
+My fourth test case sets input and output files and runs them as options with my executable to check that no errors are encountered in accessing these files. I check for exit status 0 and set my error flag if it is not 0.
+My fifth test case checks that my input was copied to my output by checking diff. I then check the status for 0 to ensure that it was successfully copied, otherwise I set my error flag.
+I then check my error flag to see if I passed all my test cases.
+
+To research some of the C functions as well as syntax, I used the provided Linux manual pages as well as the sources provided below.
+
+SOURCES:
+https://stackoverflow.com/questions/77005/how-to-automatically-generate-a-stacktrace-when-my-program-crashes
+http://www.cs.toronto.edu/~penny/teaching/csc444-05f/maketutorial.html
+https://stackoverflow.com/questions/3148492/suppress-messages-in-make-clean-makefile-silent-remove
+https://askubuntu.com/questions/29370/how-to-check-if-a-command-succeeded

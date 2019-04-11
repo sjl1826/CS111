@@ -1,0 +1,103 @@
+Total: 1418 samples
+    1266  89.3%  89.3%     1266  89.3% lockSync
+      64   4.5%  93.8%       95   6.7% SortedList_lookup
+      64   4.5%  98.3%       64   4.5% __strcmp_sse42
+      22   1.6%  99.9%       56   3.9% SortedList_insert
+       1   0.1%  99.9%        1   0.1% _init
+       1   0.1% 100.0%     1418 100.0% threadFunc
+       0   0.0% 100.0%     1418 100.0% __clone
+       0   0.0% 100.0%     1418 100.0% start_thread
+ROUTINE ====================== threadFunc in /u/cs/ugrad/samuelle/CS111/Lab2B/lab2_list.c
+     1   1418 Total samples (flat / cumulative)
+     .      .   72:   while(*key)
+     .      .   73:     hash = 33 * hash ^ (unsigned char) *key++;
+     .      .   74:   return hash;
+     .      .   75: }
+     .      .   76: 
+---
+     .      .   77: void *threadFunc(void *arg) {
+     .      .   78:   long long threadLockTime = 0;
+     .      .   79:   int threadID = *(int *) arg;
+     .      .   80:   for(int i = threadID; i < numthreads*iterations; i+= numthreads) {
+     .      .   81:     size_t subListPos = hash(elements[i]->key) % numLists;
+     .    658   82:     lockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp), &threadLockTime);
+     1     57   83:     SortedList_insert(main_list[subListPos].list, elements[i]);
+     .      .   84:     unlockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp));
+     .      .   85:   }
+     .      .   86: 
+     .      .   87:   for(int i = 0; i<numLists; i++) {
+     .      .   88:     lockSync(&(main_list[i].lock), &(main_list[i].sp), &threadLockTime);
+     .      .   89:     main_list[i].listlength = SortedList_length(main_list[i].list);
+     .      .   90:     unlockSync(&(main_list[i].lock), &(main_list[i].sp));
+     .      .   91:   }
+     .      .   92: 
+     .      .   93:   SortedListElement_t *ptr;
+     .      .   94:   for(int i = threadID; i < iterations*numthreads; i+= numthreads) {
+     .      .   95:     size_t subListPos = hash(elements[i]->key) % numLists;
+     .    608   96:     lockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp), &threadLockTime);
+     .     95   97:     if((ptr = SortedList_lookup(main_list[subListPos].list, elements[i]->key)) == NULL) {
+     .      .   98:       fprintf(stderr, "Error: element cannot be found\n");
+     .      .   99:       exit(1);
+     .      .  100:     }
+     .      .  101:     if(SortedList_delete(ptr) != 0) {
+     .      .  102:       fprintf(stderr, "Error: Could not delete element\n");
+     .      .  103:       exit(1);
+     .      .  104:     }
+     .      .  105:     unlockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp));
+     .      .  106:   }
+     .      .  107:   totalLockTime += threadLockTime;
+     .      .  108:   return NULL;
+     .      .  109: }
+---
+     .      .  110: 
+     .      .  111: int main(int argc, char *argv[]) {
+     .      .  112:   static struct option long_options[] = {
+     .      .  113: 					 {"threads", required_argument, 0, 'a'},
+     .      .  114: 					 {"iterations", required_argument, 0, 'b'},
+ROUTINE ====================== threadFunc in /u/cs/ugrad/samuelle/CS111/Lab2B/lab2_list.c
+     1   1418 Total samples (flat / cumulative)
+     .      .   72:   while(*key)
+     .      .   73:     hash = 33 * hash ^ (unsigned char) *key++;
+     .      .   74:   return hash;
+     .      .   75: }
+     .      .   76: 
+---
+     .      .   77: void *threadFunc(void *arg) {
+     .      .   78:   long long threadLockTime = 0;
+     .      .   79:   int threadID = *(int *) arg;
+     .      .   80:   for(int i = threadID; i < numthreads*iterations; i+= numthreads) {
+     .      .   81:     size_t subListPos = hash(elements[i]->key) % numLists;
+     .    658   82:     lockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp), &threadLockTime);
+     1     57   83:     SortedList_insert(main_list[subListPos].list, elements[i]);
+     .      .   84:     unlockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp));
+     .      .   85:   }
+     .      .   86: 
+     .      .   87:   for(int i = 0; i<numLists; i++) {
+     .      .   88:     lockSync(&(main_list[i].lock), &(main_list[i].sp), &threadLockTime);
+     .      .   89:     main_list[i].listlength = SortedList_length(main_list[i].list);
+     .      .   90:     unlockSync(&(main_list[i].lock), &(main_list[i].sp));
+     .      .   91:   }
+     .      .   92: 
+     .      .   93:   SortedListElement_t *ptr;
+     .      .   94:   for(int i = threadID; i < iterations*numthreads; i+= numthreads) {
+     .      .   95:     size_t subListPos = hash(elements[i]->key) % numLists;
+     .    608   96:     lockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp), &threadLockTime);
+     .     95   97:     if((ptr = SortedList_lookup(main_list[subListPos].list, elements[i]->key)) == NULL) {
+     .      .   98:       fprintf(stderr, "Error: element cannot be found\n");
+     .      .   99:       exit(1);
+     .      .  100:     }
+     .      .  101:     if(SortedList_delete(ptr) != 0) {
+     .      .  102:       fprintf(stderr, "Error: Could not delete element\n");
+     .      .  103:       exit(1);
+     .      .  104:     }
+     .      .  105:     unlockSync(&(main_list[subListPos].lock), &(main_list[subListPos].sp));
+     .      .  106:   }
+     .      .  107:   totalLockTime += threadLockTime;
+     .      .  108:   return NULL;
+     .      .  109: }
+---
+     .      .  110: 
+     .      .  111: int main(int argc, char *argv[]) {
+     .      .  112:   static struct option long_options[] = {
+     .      .  113: 					 {"threads", required_argument, 0, 'a'},
+     .      .  114: 					 {"iterations", required_argument, 0, 'b'},
